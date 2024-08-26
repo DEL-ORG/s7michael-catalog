@@ -56,6 +56,7 @@ pipeline {
                     cd catalog
                     docker build -t s7michael-catalog:${BUILD_NUMBER} .
                     '''
+                    echo "Docker image built and tagged with build number: ${BUILD_NUMBER}"
                 }
             }
         }
@@ -73,6 +74,7 @@ pipeline {
                         docker tag s7michael-catalog:${BUILD_NUMBER} ${DOCKERHUB_REPO}:${BUILD_NUMBER}
                         docker push ${DOCKERHUB_REPO}:${BUILD_NUMBER}
                         '''
+                        echo "Docker image pushed to DockerHub with build number: ${BUILD_NUMBER}"
                     }
                 }
             }
