@@ -20,8 +20,28 @@ pipeline {
             steps {
                 sh '''
                 cd catalog
-                go test
+                go test -v ./...
                 ''' // Run Go tests with verbose output
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            agent {
+                docker {
+                    image 'sonarsource/sonar-scanner-cli:4.7.0'
+                }
+            }
+            environment {
+                CI = 'true'
+                scannerHome = '/opt/sonar-scanner'
+            }
+            steps {
+                withSonarQubeEnv('Sonar') {
+                    sh '''
+                    cd catalog
+                    ${scannerHome}/bin/sonar-scanner
+                    '''
+                }
             }
         }
     }
