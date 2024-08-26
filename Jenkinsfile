@@ -44,5 +44,20 @@ pipeline {
                 }
             }
         }
+
+        stage('Build') {
+            steps {
+                script {
+                    // Get the build number from Jenkins
+                    def buildNumber = env.BUILD_NUMBER
+                    def imageName = "my-docker-image:${buildNumber}"
+
+                    // Build and tag the Docker image
+                    sh '''
+                    docker build -t ${imageName} .
+                    '''
+                }
+            }
+        }
     }
 }
