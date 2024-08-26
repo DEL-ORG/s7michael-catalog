@@ -50,7 +50,7 @@ pipeline {
                 script {
                     // Get the build number from Jenkins
                     def buildNumber = env.BUILD_NUMBER
-                    def imageName = "my-docker-image:${buildNumber}"
+                    def imageName = "s7michael-catalog:${buildNumber}"
 
                     // Build and tag the Docker image
                     sh '''
