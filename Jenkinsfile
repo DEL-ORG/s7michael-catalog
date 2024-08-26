@@ -48,14 +48,11 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Get the build number from Jenkins
-                    def buildNumber = env.BUILD_NUMBER
-                    def imageName = "s7michael-catalog:${buildNumber}"
 
                     // Build and tag the Docker image
                     sh '''
                     cd catalog
-                    docker build -t ${imageName} .
+                    docker build -t s7michael-catalog:${buildNumber} .
                     '''
                 }
             }
