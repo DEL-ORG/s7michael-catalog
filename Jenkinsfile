@@ -29,6 +29,7 @@ pipeline {
             agent {
                 docker {
                     image 'sonarsource/sonar-scanner-cli:11.0'
+                    args '-u root'
                 }
             }
             environment {
