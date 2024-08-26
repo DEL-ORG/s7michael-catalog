@@ -9,5 +9,17 @@ pipeline {
                     credentialsId: 'github-ssh'
             }
         }
+
+        stage('Unit Test') {
+            agent {
+                docker {
+                    image 'golang:1.20' // Docker image with Go installed
+                    args '-u root' // Run as root
+                }
+            }
+            steps {
+                sh 'go test' // Run Go tests with verbose output
+            }
+        }
     }
 }
