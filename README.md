@@ -1,1 +1,1 @@
-# s7michael-catalog
+# Eric-do-it-yourself-Catalog
