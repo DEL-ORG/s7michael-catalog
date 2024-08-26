@@ -18,7 +18,10 @@ pipeline {
                 }
             }
             steps {
-                sh 'go test' // Run Go tests with verbose output
+                sh '''
+                cd catalog
+                go test
+                ''' // Run Go tests with verbose output
             }
         }
     }
