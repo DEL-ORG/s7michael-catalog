@@ -54,6 +54,7 @@ pipeline {
 
                     // Build and tag the Docker image
                     sh '''
+                    cd catalog
                     docker build -t ${imageName} .
                     '''
                 }
