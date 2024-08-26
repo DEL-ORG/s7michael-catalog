@@ -34,7 +34,7 @@ pipeline {
             }
             environment {
                 CI = 'true'
-                scannerHome = '/opt/sonar-scanner'
+                scannerHome = '/opt/sonar-scanner/bin/sonar-scanner'
             }
             steps {
                 withSonarQubeEnv('Sonar') {
