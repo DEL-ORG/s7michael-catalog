@@ -48,11 +48,24 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    // Ensure Docker is available
+                    sh 'docker --version'
+
+                    // Print debug information
+                    sh '''
+                    echo "Current directory:"
+                    pwd
+                    echo "Listing files:"
+                    ls -al
+                    cd catalog
+                    echo "Listing files in catalog:"
+                    ls -al
+                    '''
 
                     // Build and tag the Docker image
                     sh '''
                     cd catalog
-                    docker build -t s7michael-catalog:${buildNumber} .
+                    docker build -t s7michael-catalog:${BUILD_NUMBER} .
                     '''
                 }
             }
