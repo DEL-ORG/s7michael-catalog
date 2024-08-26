@@ -34,12 +34,11 @@ pipeline {
             }
             environment {
                 CI = 'true'
-                scannerHome = '/opt/sonar-scanner/bin/sonar-scanner'
+                scannerHome = '/opt/sonar-scanner'
             }
             steps {
                 withSonarQubeEnv('Sonar') {
                     sh '''
-                    cd catalog
                     ${scannerHome}/bin/sonar-scanner
                     '''
                 }
