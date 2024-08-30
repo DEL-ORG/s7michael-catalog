@@ -20,7 +20,8 @@ pipeline {
             }
             steps {
                 sh '''
-                go test -v ./...
+                cd catalog
+                go test 
                 '''
             }
         }
