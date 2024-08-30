@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Checkout First Repo') {
             steps {
                 git url: 'git@github.com:DEL-ORG/s7michael-catalog.git', 
                     branch: 'main', 
@@ -77,6 +77,14 @@ pipeline {
                         echo "Docker image pushed to DockerHub with build number: ${BUILD_NUMBER}"
                     }
                 }
+            }
+        }
+
+        stage('Checkout Second Repo') {
+            steps {
+                git url: 'git@github.com:DEL-ORG/catalog-s7michael.git', 
+                    branch: 'main', 
+                    credentialsId: 'github-ssh'
             }
         }
     }
