@@ -50,6 +50,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    cd catalog
                     docker build -t s7michael-catalog:${BUILD_NUMBER} .
                     '''
                 }
