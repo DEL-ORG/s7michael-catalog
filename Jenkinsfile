@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout First Repo') {
+        // Checkout and work with the first repository
+        stage('Checkout Catalog Repo') {
             steps {
                 git url: 'git@github.com:DEL-ORG/s7michael-catalog.git', 
                     branch: 'main', 
@@ -13,15 +14,14 @@ pipeline {
         stage('Unit Test') {
             agent {
                 docker {
-                    image 'golang:1.20' // Docker image with Go installed
-                    args '-u root' // Run as root
+                    image 'golang:1.20'
+                    args '-u root'
                 }
             }
             steps {
                 sh '''
-                cd catalog
                 go test -v ./...
-                ''' // Run Go tests with verbose output
+                '''
             }
         }
 
@@ -45,46 +45,55 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Ensure Docker is available
-                    sh 'docker --version'
-
-                    // Build and tag the Docker image
                     sh '''
-                    cd catalog
                     docker build -t s7michael-catalog:${BUILD_NUMBER} .
                     '''
-                    echo "Docker image built and tagged with build number: ${BUILD_NUMBER}"
                 }
             }
         }
 
-        stage('Push to DockerHub') {
+        stage('Push Docker Image to DockerHub') {
             environment {
-                DOCKER_CREDENTIALS_ID = 'del-docker-hub-auth' // Set this to your DockerHub credentials ID in Jenkins
-                DOCKERHUB_REPO = 'devopseasylearning/s7michael-catalog' // Replace with your DockerHub repo
+                DOCKER_CREDENTIALS_ID = 'del-docker-hub-auth'
+                DOCKERHUB_REPO = 'devopseasylearning/s7michael-catalog'
             }
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_CREDENTIALS_ID}") {
                         sh '''
-                        cd catalog
                         docker tag s7michael-catalog:${BUILD_NUMBER} ${DOCKERHUB_REPO}:${BUILD_NUMBER}
                         docker push ${DOCKERHUB_REPO}:${BUILD_NUMBER}
                         '''
-                        echo "Docker image pushed to DockerHub with build number: ${BUILD_NUMBER}"
                     }
                 }
             }
         }
 
-        stage('Checkout Second Repo') {
+        // Switch to the second repository
+        stage('Checkout Helm Chart Repo') {
             steps {
                 git url: 'git@github.com:DEL-ORG/catalog-s7michael.git', 
                     branch: 'main', 
                     credentialsId: 'github-ssh'
+            }
+        }
+
+        stage('Update Helm Chart and Deploy') {
+            steps {
+                script {
+                    // Update the image tag in the Helm chart's values.yaml file
+                    sh '''
+                    yq e '.image.tag = "${BUILD_NUMBER}"' -i /catalog-s7michael/values.yaml
+                    '''
+
+                    // Deploy using Helm
+                    sh '''
+                    helm upgrade --install catalog /catalog-s7michael --namespace s7michael
+                    '''
+                }
             }
         }
     }
