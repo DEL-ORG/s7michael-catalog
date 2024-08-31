@@ -90,7 +90,20 @@ pipeline {
                     sh '''
                     yq e '.image.tag = "${BUILD_NUMBER}"' -i ./catalog/values.yaml
                     '''
-                    
+                }
+            }
+        }
+
+        stage('Commit and Push Changes') {
+            steps {
+                script {
+                    // Commit and push the changes to the second repository
+                    sh '''
+                    git config user.email "michaelsobamowo@gmail.com"
+                    git add ./catalog/values.yaml
+                    git commit -m "Update image tag to ${BUILD_NUMBER}"
+                    git push origin main
+                    '''
                 }
             }
         }
