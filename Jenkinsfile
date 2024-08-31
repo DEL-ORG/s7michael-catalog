@@ -88,7 +88,6 @@ pipeline {
                 script {
                     // Update the image tag in the Helm chart's values.yaml file
                     sh '''
-                    cd catalog2
                     yq e '.image.tag = "${BUILD_NUMBER}"' -i /catalog
                     '''
 
