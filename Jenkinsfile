@@ -88,15 +88,16 @@ pipeline {
                 script {
                     // Update the image tag in the Helm chart's values.yaml file
                     sh '''
-                    yq e '.image.tag = "${BUILD_NUMBER}"' -i /catalog
+                    yq e '.image.tag = "${BUILD_NUMBER}"' -i ./catalog2/values.yaml
                     '''
 
                     // Deploy using Helm
                     sh '''
-                    helm upgrade --install catalog /catalog2 --namespace s7michael
+                    helm upgrade --install catalog ./catalog2 --namespace s7michael
                     '''
                 }
             }
         }
     }
 }
+
