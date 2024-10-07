@@ -77,8 +77,8 @@ pipeline {
         // Switch to the second repository
         stage('Checkout Helm Chart Repo') {
             steps {
-                git url: 'git@github.com:DEL-ORG/catalog-s7michael.git', 
-                    branch: 'main', 
+                git url: 'git@github.com:DEL-ORG/s7michael-deployment.git', 
+                    branch: 'dev', 
                     credentialsId: 'github-ssh'
             }
         }
@@ -88,7 +88,7 @@ pipeline {
                 script {
                     // Update the image tag in the Helm chart's values.yaml file
                     sh '''
-                    yq e '.image.tag = "${BUILD_NUMBER}"' -i ./catalog/values.yaml
+                    yq e '.catalog.tag = "${BUILD_NUMBER}"' -i ./chart/dev-values.yaml
                     '''
                 }
             }
@@ -100,12 +100,18 @@ pipeline {
                     // Commit and push the changes to the second repository
                     sh '''
                     git config user.email "michaelsobamowo@gmail.com"
-                    git add ./catalog/values.yaml
+                    git add -A
                     git commit -m "Update image tag to ${BUILD_NUMBER}"
-                    git push origin main
+                    git push origin dev
                     '''
                 }
             }
         }
     }
 }
+
+
+
+
+
+
