@@ -102,7 +102,7 @@ pipeline {
                     git config user.email "michaelsobamowo@gmail.com"
                     git add -A
                     git commit -m "Update image tag to ${BUILD_NUMBER}"   
-                    git push               
+                    git push --set-upstream origin dev               
                     '''
                 }
             }
