@@ -101,7 +101,7 @@ pipeline {
                     
                     // Update the image tag in the Helm chart's values.yaml file and push changes
                     sh '''
-                    yq e '.catalog.tag = "${BUILD_NUMBER}"' -i ./chart/dev-values.yaml
+                    yq e '.catalog.tag = "'"${BUILD_NUMBER}"'"' -i ./chart/dev-values.yaml
                     git config user.email "michaelsobamowo@gmail.com"
                     git config user.name "michael-ayo"
                     git add -A
