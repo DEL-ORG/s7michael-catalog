@@ -82,18 +82,20 @@ pipeline {
         // Switch to the second repository and update Helm chart
         stage('Update and Push Helm Chart') {
             steps {
-                git url: 'git@github.com:DEL-ORG/s7michael-deployment.git', 
-                    branch: 'dev', 
-                    credentialsId: 'github-ssh'
-                
                 script {
+                    // Checkout the second repository
+                    git url: 'git@github.com:DEL-ORG/s7michael-deployment.git', 
+                        branch: 'dev', 
+                        credentialsId: 'github-ssh'
+                    
                     // Update the image tag in the Helm chart's values.yaml file and push changes
                     sh '''
                     yq e '.catalog.tag = "${BUILD_NUMBER}"' -i ./chart/dev-values.yaml
                     git config user.email "michaelsobamowo@gmail.com"
+                    git config user.name "michael-ayo"
                     git add -A
-                    git commit -m "Update image tag to ${BUILD_NUMBER}"
-                    git push --set-upstream origin dev
+                    git commit -m "Update image tag to ${BUILD_NUMBER}" || echo "No changes to commit"
+                    git push --set-upstream origin dev || echo "Push failed"
                     '''
                 }
             }
