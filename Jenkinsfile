@@ -62,6 +62,17 @@ pipeline {
             }
         }
 
+                stage('Build Docker db') {
+            steps {
+                script {
+                    sh '''
+                    cd catalog
+                    docker build -t s7michael-catalog:${BUILD_NUMBER} . -f Dockerfile-db
+                    '''
+                }
+            }
+        }
+
         stage('Push Docker Image to DockerHub') {
             environment {
                 DOCKER_CREDENTIALS_ID = 'del-docker-hub-auth'
