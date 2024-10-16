@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    options {
+        // Keep only the last 10 builds
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
     stages {
         // Checkout and work with the first repository
         stage('Checkout Catalog Repo') {
